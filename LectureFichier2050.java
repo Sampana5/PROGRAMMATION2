@@ -136,12 +136,9 @@ import java.io.PrintWriter;
             for (int i = 0; i < tableauFichier2050.length && tableauFichier2050[i] != null; i++) {
                 // Écrit les lignes les unes après les autres.
                
-                    fluxPrintWriter.println(tableauFichier2050[i].getArrondissement());
+                    fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
                 }   
-            //fluxPrintWriter.println(tableauFichier2050[i].formaterAvant());
-                //int i = 0; i < tableauFichierFin.length && tableauFichierFin[i] != null; i++
-            // Fermeture du flux d'écriture
-            //int i = tableauFichier2050.length - 1 ; i > 1 && tableauFichier2050[i] != null; i--
+            
             fluxPrintWriter.close();
 
         } catch (IOException e) {
