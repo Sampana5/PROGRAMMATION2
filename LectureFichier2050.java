@@ -1,5 +1,5 @@
 
-
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -124,7 +124,7 @@ import java.io.PrintWriter;
 
     public static void EcrireFichier(){
 
-
+        public ArraayList<String> liste = new ArrayList();
         // Déclarations des variables
         PrintWriter fluxPrintWriter;
 
@@ -134,13 +134,23 @@ import java.io.PrintWriter;
 
             // Écriture des lignes dansle fichier.
             for (int i = tableauFichier2050.length; i >= 0  && tableauFichier2050[i] != null; i--) {
-                // Écrit les lignes les unes après les autres.
-                    int a= i-1;
-                    if(tableauFichier2050[i].getArrondissement() != tableauFichier2050[i-1].getArrondissement() && i >=0){
-                    fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
-                        
+               
+                    
+                    if(!liste.contains(tableauFichier2050[i].getArrondissement())){
+                        liste.add(tableauFichier2050[i].getArrondissement())
                     }
-                }   
+                    //fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
+                        
+                    
+                } 
+            
+                for (int i = liste.size(); i >= 0  && tableauFichier2050[i] != null; i--) {
+                // Écrit les lignes les unes après les autres.
+ 
+                    fluxPrintWriter.println(liste.get(i)+","+ occurernce(tableauFichier2050[i].getArrondissement()));
+                        
+                    
+                } 
             
             fluxPrintWriter.close();
 
