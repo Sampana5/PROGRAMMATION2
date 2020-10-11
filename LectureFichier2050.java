@@ -133,14 +133,12 @@ import java.io.PrintWriter;
             fluxPrintWriter = new PrintWriter(NOM_FICHIER2);
 
             // Écriture des lignes dansle fichier.
-            for (int i = 0; i < tableauFichier2050.length && tableauFichier2050[i] != null; i++) {
+            for (int i = tableauFichier2050.length; i >= 0  && tableauFichier2050[i] != null; i--) {
                 // Écrit les lignes les unes après les autres.
-               
-                    if(tableauFichier2050[i].getArrondissement() != tableauFichier2050[i-1].getArrondissement() && i >0){
+                    int a= i-1;
+                    if(tableauFichier2050[i].getArrondissement() != tableauFichier2050[i-1].getArrondissement() && i >=0){
                     fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
                         
-                    }else if(i == 0){
-                        fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
                     }
                 }   
             
