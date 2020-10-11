@@ -136,7 +136,12 @@ import java.io.PrintWriter;
             for (int i = 0; i < tableauFichier2050.length && tableauFichier2050[i] != null; i++) {
                 // Écrit les lignes les unes après les autres.
                
+                    if(tableauFichier2050[i].getArrondissement() != tableauFichier2050[i-1].getArrondissement() && i >0){
                     fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
+                        
+                    }else if(i == 0){
+                        fluxPrintWriter.println(tableauFichier2050[i].getArrondissement()+","+ occurernce(tableauFichier2050[i].getArrondissement()));
+                    }
                 }   
             
             fluxPrintWriter.close();
