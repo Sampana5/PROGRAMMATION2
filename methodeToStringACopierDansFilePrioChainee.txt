@@ -1,0 +1,22 @@
+/**
+ * Construit une representation sous forme de chaine de caracteres de cette
+ * file de priorite.
+ * @return une representation sous forme de chaine de caracteres de cette
+ *         file de priorite.
+ */
+@Override
+public String toString() {
+	String s = "tete [ ";
+	Maillon<T> tmp = elements;
+	if (tmp == null) {
+		s = s + " ] fin";
+	} else {
+		while (tmp != null) {
+			s = s + tmp.getInfo() + ", ";
+			tmp = tmp.getSuivant();
+		}
+		s = s.substring(0, s.length() -2) + " ] fin";
+	} 
+	return s;
+}
+
