@@ -1,9 +1,12 @@
-import java.io.File;
+import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CollectionMusicale {
@@ -26,17 +29,31 @@ public class CollectionMusicale {
      *                  //des albums de cette collection.
      */
     public CollectionMusicale(String ficAlbums){
-        Path chemin = Paths.get(ficAlbums);
+        Path p = Paths.get(ficAlbums);
+        albums = new ArrayList<>();
 
         try {
             // Créer un stream dont les éléments sont des lignes 
             //du fichier Albums.txt
-            Stream<Album> albFile = Files.lines(chemin);
-            Album[] tabAlbums = albFile.toArray(i -> new Album[i]);
-            albums = new ArrayList<>(tabAlbums);
+            Stream<String> albFile = Files.lines(p);
+            albFile
+            .filter(line -> !line.startsWith("#"))
+            .forEach(lin -> {
+                if(lin != null ){
+                    String tab[] = lin.split("\\|");
+                    Album al = new Album(Integer.parseInt(tab[0].trim()), tab[2], tab[3], Integer.parseInt(tab[1].trim()),Integer.parseInt(tab[4].trim()));
+                    al.ajouterGenre(tab[5]);
+                    if (tab[6] != null) {
+                        al.ajouterSousGenre(tab[6]);
+                }
+                
+                albums.add(al);}
+                        });
+            albFile.close();
         } catch (IOException e) {
             System.out.println("Erreur d'entree / sortie");
         }
+
     }
 
 
@@ -94,7 +111,35 @@ public class CollectionMusicale {
 
 
     public Album[] rechercherParPeriode(int anneeMin, int anneeMax){
+        return albums.stream().filter(e -> e.getAnnee() >= anneeMin && e.getAnnee() <= anneeMax)
+                .sorted().toArray(i -> new Album[i]);
+    }
 
+    public Album[] rechercherParAnnee(int annee){
+        return albums.stream().filter(e -> e.getAnnee() == annee)
+                .sorted().toArray(i -> new Album[i]);
+    }
+
+    public Album[] rechercherParevaluation(int eval){
+        return albums.stream().filter(e -> e.getEvaluation() == eval)
+                .distinct().sorted().toArray(i -> new Album[i]);
+    }
+
+    public Album[] rechercherParGenres(String[] genres){
+        return null;
+    }
+
+    public double getMoyenneEvaluations(String artiste){
+        return 0;
+    }
+
+   
+
+    public static void main(String[] args) {
+        CollectionMusicale ab = new CollectionMusicale("albums.txt");
+        
+            System.out.println(ab.albums.size());
+        
     }
 
 }
