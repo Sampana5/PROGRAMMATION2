@@ -5,9 +5,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.function.Predicate;
 
 public class CollectionMusicale {
     
@@ -15,7 +18,7 @@ public class CollectionMusicale {
     // ATTRIBUT D'INSTANCE
     //----------------------
 
-    private List<Album> albums;//La liste des albumsappartenant à cette collection.
+     List<Album> albums;//La liste des albumsappartenant à cette collection.
 
     //----------------------
     // CONSTRUCTEUR
@@ -38,14 +41,15 @@ public class CollectionMusicale {
             Stream<String> albFile = Files.lines(p);
             albFile
             .filter(line -> !line.startsWith("#"))
+            .filter(line -> line.contains("|"))
             .forEach(lin -> {
                 if(lin != null ){
                     String tab[] = lin.split("\\|");
                     Album al = new Album(Integer.parseInt(tab[0].trim()), tab[2], tab[3], Integer.parseInt(tab[1].trim()),Integer.parseInt(tab[4].trim()));
                     al.ajouterGenre(tab[5]);
-                    if (tab[6] != null) {
-                        al.ajouterSousGenre(tab[6]);
-                }
+                    //if (tab[6] != null) {
+                       // al.ajouterSousGenre(tab[6]);
+                //}
                 
                 albums.add(al);}
                         });
@@ -111,35 +115,76 @@ public class CollectionMusicale {
 
 
     public Album[] rechercherParPeriode(int anneeMin, int anneeMax){
-        return albums.stream().filter(e -> e.getAnnee() >= anneeMin && e.getAnnee() <= anneeMax)
-                .sorted().toArray(i -> new Album[i]);
+
+        Album[] tab = null;
+        Predicate<Album> estSup = e -> e.getAnnee() >= anneeMin;
+        Predicate<Album> estInf = e -> e.getAnnee() <= anneeMax;
+        
+     
+        if (anneeMin == anneeMax) {
+            tab = rechercherParAnnee(anneeMax);
+
+        } else if (anneeMin > anneeMax){
+            tab = null;
+        } else {
+            tab = albums.stream().filter(estSup.and(estInf)).sorted().toArray(i -> new Album[i]);
+        }
+        return tab;
     }
 
     public Album[] rechercherParAnnee(int annee){
+
         return albums.stream().filter(e -> e.getAnnee() == annee)
                 .sorted().toArray(i -> new Album[i]);
     }
 
     public Album[] rechercherParevaluation(int eval){
+        Comparator<Album> trie = (e1, e2) -> {
+            int res = 0;
+            if (e1.getTitre().compareToIgnoreCase(e2.getTitre()) == -1) 
+                res = -1;
+             else if (e1.getTitre().compareToIgnoreCase(e2.getTitre()) == 1)
+                res = 1;
+            return res;
+        };
         return albums.stream().filter(e -> e.getEvaluation() == eval)
-                .distinct().sorted().toArray(i -> new Album[i]);
+                .distinct().sorted(trie).toArray(i -> new Album[i]);
     }
 
     public Album[] rechercherParGenres(String[] genres){
-        return null;
+        
+        Album [] tab = null;
+        //String genre = "";
+        //Iterator<String> iterGenre = 
+       /** Predicate<Album> estContainsGenre = e -> {
+            Iterator<String> iter = e.iterateurGenres();
+            iter.forEachRemaining((String gen) -> gen.contains(genre));   
+        };
+       // Predicate<Album> estContainsSousGenre = e -> System.out.println(e); //e.iterateurSousGenres().forEachRemaining(a -> a.contains(genre));;
+
+        if (genres.length > 0 && genres != null){
+            for (int i = 0; i < genres.length; i++) {
+                genre = genres[i];
+                tab = albums.stream().filter(estContainsGenre.or(estContainsSousGenre)).distinct().sorted(trie).toArray(i -> new Album[i]);
+            }
+        }*/
+        return tab;
     }
 
     public double getMoyenneEvaluations(String artiste){
         return 0;
     }
 
-   
 
     public static void main(String[] args) {
         CollectionMusicale ab = new CollectionMusicale("albums.txt");
         
-            System.out.println(ab.albums.size());
+            System.out.println(ab.getNombreAlbumsDistincts());
+
+            System.out.println(ab.albums.get(0).toString());
         
     }
+
+    
 
 }
